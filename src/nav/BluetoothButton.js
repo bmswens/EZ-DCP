@@ -8,6 +8,9 @@ import { IconButton, Tooltip } from '@mui/material'
 import BluetoothIcon from '@mui/icons-material/Bluetooth'
 import BluetoothConnectedIcon from '@mui/icons-material/BluetoothConnected'
 
+// custom
+import BluetoothContext from '../context/BluetoothContext'
+
 
 function BluetoothDisplay(props) {
     const {connected} = props
@@ -25,10 +28,14 @@ function BluetoothDisplay(props) {
 
 function BluetoothButton(props) {
 
-    // const [connected, setConnected] = React.useState(false)
-    // const tooltipText = connected ? "Bluetooth Connected" : "Bluetooth Disconnected"
-    const connected = true
-    const tooltipText = "Bluetooth Connected"
+    const {
+        connected,
+        connect,
+        disconnect
+    } = React.useContext(BluetoothContext)
+
+    const tooltipText = connected ? "Bluetooth Connected" : "Bluetooth Disconnected"
+    const callback = connected ? disconnect : connect
 
     return (
         <Tooltip
@@ -36,7 +43,7 @@ function BluetoothButton(props) {
         >
             <IconButton
                 aria-label="Toggle Bluetooth"
-                // onClick={() => setConnected(!connected)}
+                onClick={callback}
             >
                 <BluetoothDisplay
                     connected={connected}
