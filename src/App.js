@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// router
+import { BrowserRouter, HashRouter } from "react-router-dom"
+
+// custom
+import Content from "./content/Content"
+import Context from "./context/Context"
+import TopNav from "./nav/TopNav"
+
+function Router(props) {
+  const deployment = process.env.REACT_APP_DEPLOYMENT
+  /* istanbul ignore if: deployment config */
+  if (deployment === "github") {
+    return (
+      <HashRouter>
+        {props.children}
+      </HashRouter>
+    )
+  }
+  return (
+    <BrowserRouter>
+      {props.children}
+    </BrowserRouter>
+  )
+}
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Context>
+        <TopNav />
+        <Content />
+      </Context>
+    </Router>
+  )
 }
 
-export default App;
+export default App
