@@ -8,7 +8,9 @@ import { Grid } from '@mui/material'
 import { Route, Routes } from 'react-router-dom'
 
 // custom
-import Homepage from './Homepage'
+//import Homepage from './Homepage'
+import AllProjects from './projects/AllProjects'
+import Project from './projects/Project'
 
 function ContentGrid(props) {
 
@@ -30,7 +32,20 @@ function ContentGrid(props) {
 function Content(props) {
 
     return (
-        <Homepage />
+        <Routes>
+            <Route
+                path="/"
+                element={<AllProjects />}
+            />
+            <Route
+                path="/projects"
+                element={<AllProjects />}
+            />
+            <Route
+                path="/projects/:projectId"
+                element={<Project />}
+            />
+        </Routes>
     )
 }
 

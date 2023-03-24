@@ -49,7 +49,7 @@ function BluetoothContextProvider(props) {
             .then(characteristic => {
                 characteristic.addEventListener('characteristicvaluechanged', handleChange)
                 setConnected(true)
-                alertContext.alert("Bluetooth connected Successfully!", "success")
+                alertContext.alert("Bluetooth connected successfully!", "success")
             })
             .catch(error => {
                 console.error('ERROR: ' + error)
