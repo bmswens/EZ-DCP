@@ -13,8 +13,7 @@ import HearingIcon from '@mui/icons-material/Hearing';
 import HearingDisabledIcon from '@mui/icons-material/HearingDisabled';
 
 // use vole level
-// once the merge goes through, convert back to main package
-import { useVolumeLevel } from '@bmswens/react-volume-indicator';
+import { useVolumeLevel } from 'react-volume-indicator';
 
 // custom
 import BluetoothContext from '../../context/BluetoothContext'
