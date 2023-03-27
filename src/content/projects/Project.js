@@ -1,6 +1,6 @@
 // React
 import React from 'react'
- 
+
 // MUI
 import { Grid, LinearProgress } from '@mui/material'
 
@@ -49,21 +49,21 @@ function BlowsGrid(props) {
     if (blows && blows.length) {
         let prev = null
         for (let index in blows) {
-            let current = {...blows[index]}
+            let current = { ...blows[index] }
             current.depth = convertUnits(current.depth, unitOfMeasure)
             if (index === "0") {
                 current.delta = 0
-                current.deltaNum = deltaCount
+                current.culmDelta = deltaCount
             }
             else {
                 current.delta = Math.abs(current.depth - prev.depth)
                 culmDelta += current.delta
                 // 1in in meters
-                if (culmDelta >= 0.0254) {
-                    culmDelta = 0
-                    deltaCount += 1
-                }
-                current.deltaNum = deltaCount
+                // if (culmDelta >= 0.0254) {
+                //     culmDelta = 0
+                //     deltaCount += 1
+                // }
+                current.culmDelta = culmDelta
             }
             rows.push(current)
             prev = current
@@ -77,8 +77,8 @@ function BlowsGrid(props) {
             flex: 1
         },
         {
-            field: "deltaNum",
-            headerName: "Delta #",
+            field: "depth",
+            headerName: "Depth",
             type: "number",
             flex: 1
         },
@@ -89,8 +89,8 @@ function BlowsGrid(props) {
             flex: 1
         },
         {
-            field: "depth",
-            headerName: "Depth",
+            field: "culmDelta",
+            headerName: "Total Delta",
             type: "number",
             flex: 1
         }
@@ -107,8 +107,15 @@ function BlowsGrid(props) {
             <DataGrid
                 rows={rows}
                 columns={columns}
-                slots={{toolbar: GridToolbar}}
+                slots={{ toolbar: GridToolbar }}
                 getRowId={row => row.blowNumber}
+                initialState={{
+                    columns: {
+                        columnVisibilityModel: {
+                            depth: false
+                        },
+                    },
+                }}
             />
         </Grid>
     )
