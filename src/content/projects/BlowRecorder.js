@@ -13,7 +13,7 @@ import HearingIcon from '@mui/icons-material/Hearing';
 import HearingDisabledIcon from '@mui/icons-material/HearingDisabled';
 
 // use vole level
-import { useVolumeLevel } from 'react-volume-indicator';
+import useMicrophoneVolume from "react-use-microphone-volume-hook";
 
 // custom
 import BluetoothContext from '../../context/BluetoothContext'
@@ -23,58 +23,32 @@ import api from '../../api';
 const ARBITRARY_LARGE_NUMBER = 10
 
 function BlowRecorder(props) {
+    const [volume, { startTrackingMicrophoneVolume, stopTrackingMicrophoneVolume }] = useMicrophoneVolume();
 
     const { projectId } = useParams()
     const { currentValue } = React.useContext(BluetoothContext)
-    const [startRecording, stopRecording, volume] = useVolumeLevel()
     const [recording, setRecording] = React.useState(false)
-    const [volumes, setVolumes] = React.useState([])
+
+    function onClick() {
+        if (recording) {
+            setRecording(false)
+            stopTrackingMicrophoneVolume()
+        }
+        else {
+            setRecording(true)
+            startTrackingMicrophoneVolume()
+        }
+    }
 
     async function recordBlow() {
         await api.blows.add(projectId, currentValue)
     }
 
-    // start and stop recording
     React.useEffect(() => {
-        if (recording) {
-            startRecording()
+        if (currentValue && volume > ARBITRARY_LARGE_NUMBER) {
+            api.blows.add(projectId, currentValue)
         }
-        if (recording && !currentValue) {
-            stopRecording()
-            setVolumes([])
-            setRecording(false)
-        }
-        if (!recording && volumes.length) {
-            stopRecording()
-            setVolumes([])
-        }
-    }, [recording, startRecording, stopRecording, volumes, currentValue])
-
-    // on volume change
-    React.useEffect(() => {
-        // math
-        function doMath(numArray) {
-            const mean = numArray.reduce((s, n) => s + n) / numArray.length;
-            const variance = numArray.reduce((s, n) => s + (n - mean) ** 2, 0) / (numArray.length - 1);
-            return [mean, Math.sqrt(variance)]
-        }
-        if (!currentValue || volume < 1 || (volumes.length && volume === volumes[volumes.length - 1])) {
-            return
-        }
-        let tempVolumes = [...volumes, volume]
-        // don't even attempt to calc std dev unless it's "big"
-        if (volume >= ARBITRARY_LARGE_NUMBER) {
-            console.log(volume)
-            const [mean, deviation] = doMath(tempVolumes)
-            console.log(mean)
-            console.log(deviation)
-            if (volume >= mean + deviation) {
-                console.log("recording")
-                api.blows.add(projectId, currentValue)
-            }
-        }
-        setVolumes(tempVolumes)
-    }, [volume, volumes, currentValue, projectId])
+    }, [volume, projectId, currentValue])
 
     return (
         <Grid item xs={12}>
@@ -94,12 +68,13 @@ function BlowRecorder(props) {
                         fullWidth
                         endIcon={recording ? <HearingDisabledIcon /> : <HearingIcon />}
                         disabled={!currentValue}
-                        onClick={() => setRecording(!recording)}
+                        onClick={onClick}
                     >
                         {recording ? "Stop Recording" : "Start Recording"}
                     </Button>
                 </CardActions>
-                { recording ?
+                {
+                    recording ?
                     <LinearProgress
                         value={volume}
                         valueBuffer={100}

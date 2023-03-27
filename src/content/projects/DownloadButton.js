@@ -54,7 +54,6 @@ function writeExportFileContent(project, blows) {
 
 function DownloadButton(props) {
     const { project } = props
-    console.log(project)
     const blows = useLiveQuery(() => {
         return api.db.blows.where("projectId").equals(String(project.id)).toArray()
     })

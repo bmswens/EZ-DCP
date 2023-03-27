@@ -146,7 +146,8 @@ function Project(props) {
     return (
         <ContentGrid>
             <ProjectCard {...project} />
-            <BlowRecorder />
+            <BlowRecorder
+            />
             <BlowsGrid />
         </ContentGrid>
     )
