@@ -10,12 +10,26 @@ import { useParams } from 'react-router-dom'
 // dexie
 import { useLiveQuery } from 'dexie-react-hooks'
 
+// local storage
+import useLocalStorage from '@rehooks/local-storage'
+
 // custom
 import { ContentGrid } from '../Content'
 import ProjectCard from './ProjectCard'
 import api from '../../api'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import BlowRecorder from './BlowRecorder'
+
+function convertUnits(measurement, unitOfMeasure) {
+    // lieca defauts to meters, even if the display is in imperial
+    if (unitOfMeasure === "mm") {
+        return measurement * 1000
+    }
+    else if (unitOfMeasure === "inches") {
+        return measurement * 39.3701
+    }
+    return measurement
+}
 
 function BlowsGrid(props) {
 
@@ -26,20 +40,23 @@ function BlowsGrid(props) {
         return api.db.blows.where("projectId").equals(projectId).toArray()
     })
 
+    const [unitOfMeasure] = useLocalStorage("unitOfMeasure", "inches")
+
     // calc delta
     let rows = []
     let culmDelta = 0
     let deltaCount = 0
     if (blows && blows.length) {
+        let prev = null
         for (let index in blows) {
-            let current = blows[index]
+            let current = {...blows[index]}
+            current.depth = convertUnits(current.depth, unitOfMeasure)
             if (index === "0") {
                 current.delta = 0
                 current.deltaNum = deltaCount
             }
             else {
-                let last = blows[index - 1]
-                current.delta = Math.abs(current.depth - last.depth)
+                current.delta = Math.abs(current.depth - prev.depth)
                 culmDelta += current.delta
                 // 1in in meters
                 if (culmDelta >= 0.0254) {
@@ -49,6 +66,7 @@ function BlowsGrid(props) {
                 current.deltaNum = deltaCount
             }
             rows.push(current)
+            prev = current
         }
     }
     const columns = [
