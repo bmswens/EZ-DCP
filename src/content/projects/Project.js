@@ -83,7 +83,7 @@ function BlowsGrid(props) {
             item
             xs={12}
             sx={{
-                height: "calc(100vh - 65px - 192px)"
+                height: "calc(100vh - 65px - 215px)"
             }}
         >
             <DataGrid

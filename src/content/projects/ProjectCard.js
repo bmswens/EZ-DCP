@@ -57,6 +57,8 @@ function ProjectActions(props) {
 
     return (
         <CardActions>
+            <LinkToProject id={id} />
+            <Box sx={{flexGrow: 1}} />
             <Link to={mapURL} target="_blank" >
                 <LabeledIconButton
                     title="Show On Map"
@@ -64,56 +66,10 @@ function ProjectActions(props) {
                     <MapIcon fontSize="large" />
                 </LabeledIconButton>
             </Link>
-            <Box sx={{flexGrow: 1}} />
-            <LinkToProject id={id} />
         </CardActions>
     )
 }
 
-// function AddBlowButton(props) {
-
-//     const { projectId } = useParams()
-//     const { currentValue } = React.useContext(BluetoothContext)
-
-//     async function handleClick() {
-//         await api.blows.add(projectId, currentValue)
-//     }
-
-//     if (!projectId) {
-//         return null
-//     }
-//     return (
-//         <Button
-//             variant="contained"
-//             fullWidth
-//             endIcon={<GavelIcon />}
-//             onClick={handleClick}
-//             disabled={!currentValue}
-//         >
-//             Record Blow
-//         </Button>
-//     )
-// }
-
-// function ListenButton(props) {
-
-//     const { projectId } = useParams()
-//     const { currentValue } = React.useContext(BluetoothContext)
-
-//     if (!projectId) {
-//         return null
-//     }
-//     return (
-//         <Button
-//             variant="contained"
-//             fullWidth
-//             endIcon={<HearingIcon />}
-//             disabled={!currentValue}
-//         >
-//             Record Blow
-//         </Button>
-//     )
-// }
 
 function ProjectCard(props) {
 
