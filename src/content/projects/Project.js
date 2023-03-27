@@ -39,7 +39,7 @@ function BlowsGrid(props) {
             }
             else {
                 let last = blows[index - 1]
-                current.delta = current.depth - last.depth
+                current.delta = Math.abs(current.depth - last.depth)
                 culmDelta += current.delta
                 // 1in in meters
                 if (culmDelta >= 0.0254) {
