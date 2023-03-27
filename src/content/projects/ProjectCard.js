@@ -75,9 +75,9 @@ function ProjectCard(props) {
 
     const {
         id,
-        name,
-        holeNumber,
-        section,
+        location,
+        station,
+        testNum,
         lat,
         lon
     } = props
@@ -91,9 +91,9 @@ function ProjectCard(props) {
         >
             <Card>
                 <CardHeader
-                    title={name}
-                    subheader={section}
-                    avatar={<Avatar>{holeNumber}</Avatar>}
+                    title={location}
+                    subheader={station}
+                    avatar={<Avatar>{Number(testNum)}</Avatar>}
                 />
                 <ProjectActions
                     lat={lat}

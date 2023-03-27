@@ -13,8 +13,10 @@ import api from '../../api'
 
 const emptyData = {
     name: '',
-    holeNumber: '',
-    section: '',
+    location: '',
+    station: '',
+    serialNum: '',
+    testNum: '',
     lat: '',
     lon: ''
 }
@@ -76,21 +78,27 @@ function NewProjectDialog(props) {
                 >
                     <TextField
                         fullWidth
-                        label="Name"
-                        value={data.name}
-                        onChange={event => setData({...data, name: event.target.value})}
+                        label="Location"
+                        value={data.location}
+                        onChange={event => setData({...data, location: event.target.value})}
                     />
                     <TextField
                         fullWidth
-                        label="Hole Number"
-                        value={data.holeNumber}
-                        onChange={event => setData({...data, holeNumber: event.target.value})}
+                        label="Station"
+                        value={data.station}
+                        onChange={event => setData({...data, station: event.target.value})}
                     />
                     <TextField
                         fullWidth
-                        label="Section"
-                        value={data.section}
-                        onChange={event => setData({...data, section: event.target.value})}
+                        label="Serial Number"
+                        value={data.serialNum}
+                        onChange={event => setData({...data, serialNum: event.target.value})}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Test Number"
+                        value={data.testNum}
+                        onChange={event => setData({...data, testNum: event.target.value})}
                     />
                     <Button
                         variant="contained"
