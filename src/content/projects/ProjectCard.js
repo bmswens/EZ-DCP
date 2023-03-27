@@ -7,8 +7,7 @@ import { Avatar, Box, Card, CardActions, CardHeader, Grid } from '@mui/material'
 // MUI Icons
 import MapIcon from '@mui/icons-material/Map';
 import LaunchIcon from '@mui/icons-material/Launch';
-// import GavelIcon from '@mui/icons-material/Gavel';
-// import HearingIcon from '@mui/icons-material/Hearing';
+
 
 // router 
 import { Link, useParams } from 'react-router-dom'
@@ -16,7 +15,7 @@ import { Link, useParams } from 'react-router-dom'
 // custom
 // import BluetoothContext from '../../context/BluetoothContext'
 import LabeledIconButton from '../../components/LabeledIconButtons'
-// import api from '../../api';
+import DownloadButton from './DownloadButton';
 
 function formatGoogleMapsURL(lat, lon) {
     return `https://www.google.com/maps/place/${lat},+${lon}/@${lat},${lon},16z/data=!4m4!3m3!8m2!3d33.5431111!4d-112.3723056`
@@ -43,8 +42,13 @@ function ProjectActions(props) {
 
     const {
         id,
+        location,
+        station,
+        testNum,
+        serialNum,
+        datetime,
         lat,
-        lon
+        lon,
     } = props
 
     let mapURL = formatGoogleMapsURL(lat, lon)
@@ -59,6 +63,16 @@ function ProjectActions(props) {
         <CardActions>
             <LinkToProject id={id} />
             <Box sx={{flexGrow: 1}} />
+            <DownloadButton
+                project={{
+                    id,
+                    location,
+                    station,
+                    testNum,
+                    serialNum,
+                    datetime
+                }}
+            />
             <Link to={mapURL} target="_blank" >
                 <LabeledIconButton
                     title="Show On Map"
@@ -78,6 +92,8 @@ function ProjectCard(props) {
         location,
         station,
         testNum,
+        datetime,
+        serialNum,
         lat,
         lon
     } = props
@@ -99,6 +115,11 @@ function ProjectCard(props) {
                     lat={lat}
                     lon={lon}
                     id={id}
+                    location={location}
+                    station={station}
+                    testNum={testNum}
+                    datetime={datetime}
+                    serialNum={serialNum}
                 />
             </Card>
         </Grid>
