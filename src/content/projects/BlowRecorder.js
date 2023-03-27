@@ -5,7 +5,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 
 // MUI
-import { Button, Card, CardActions, Grid, LinearProgress } from '@mui/material'
+import { Button, Card, CardActions, CardContent, Grid, LinearProgress } from '@mui/material'
 
 // MUI Icons
 import GavelIcon from '@mui/icons-material/Gavel';
@@ -15,12 +15,15 @@ import HearingDisabledIcon from '@mui/icons-material/HearingDisabled';
 // use vole level
 import useMicrophoneVolume from "react-use-microphone-volume-hook";
 
+// local storage
+import useLocalStorage from '@rehooks/local-storage';
+
 // custom
 import BluetoothContext from '../../context/BluetoothContext'
 import api from '../../api';
+import VolumeThresholdSelector from '../../components/VolumeThresholdSelector';
 
-// May have to change this, or make it a user settings
-const ARBITRARY_LARGE_NUMBER = 10
+
 
 function BlowRecorder(props) {
     const [volume, { startTrackingMicrophoneVolume, stopTrackingMicrophoneVolume }] = useMicrophoneVolume();
@@ -28,6 +31,7 @@ function BlowRecorder(props) {
     const { projectId } = useParams()
     const { currentValue } = React.useContext(BluetoothContext)
     const [recording, setRecording] = React.useState(false)
+    const [threshold] = useLocalStorage("volumeThreshold", 60)
 
     function onClick() {
         if (recording) {
@@ -45,10 +49,10 @@ function BlowRecorder(props) {
     }
 
     React.useEffect(() => {
-        if (currentValue && volume > ARBITRARY_LARGE_NUMBER) {
+        if (currentValue && volume > threshold) {
             api.blows.add(projectId, currentValue)
         }
-    }, [volume, projectId, currentValue])
+    }, [volume, projectId, currentValue, threshold])
 
     return (
         <Grid item xs={12}>
@@ -73,6 +77,9 @@ function BlowRecorder(props) {
                         {recording ? "Stop Recording" : "Start Recording"}
                     </Button>
                 </CardActions>
+                <CardContent>
+                    <VolumeThresholdSelector />
+                </CardContent>
                 {
                     recording ?
                     <LinearProgress
