@@ -63,7 +63,8 @@ function DownloadButton(props) {
         rows = [...blows]
     }
 
-    function download() {
+    function download(event) {
+        event.stopPropagation()
         const [fileName, text] = writeExportFileContent(project, rows)
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));

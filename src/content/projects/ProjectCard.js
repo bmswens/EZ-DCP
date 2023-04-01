@@ -10,7 +10,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 
 
 // router 
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 // custom
 // import BluetoothContext from '../../context/BluetoothContext'
@@ -76,6 +76,7 @@ function ProjectActions(props) {
             <Link to={mapURL} target="_blank" >
                 <LabeledIconButton
                     title="Show On Map"
+                    onClick={e => e.stopPropagation()}
                 >
                     <MapIcon fontSize="large" />
                 </LabeledIconButton>
@@ -98,6 +99,20 @@ function ProjectCard(props) {
         lon
     } = props
 
+    function handleClick(event) {
+        console.log(event.target)
+        navigate(`/projects/${id}`)
+    }
+
+    const { projectId } = useParams()
+    const navigate = useNavigate()
+    const clickableProps = {}
+    if (!projectId) {
+        clickableProps.onClick = handleClick
+        clickableProps.sx = {
+            cursor: "pointer"
+        }
+    }
 
 
     return (
@@ -105,7 +120,9 @@ function ProjectCard(props) {
             item
             xs={12}
         >
-            <Card>
+            <Card
+                {...clickableProps}
+            >
                 <CardHeader
                     title={location}
                     subheader={station}
