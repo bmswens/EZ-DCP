@@ -5,54 +5,44 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 
 // MUI
-import { Button, Card, CardActions, CardContent, Grid, LinearProgress } from '@mui/material'
+import { Button, Card, CardActions, CardContent, Grid } from '@mui/material'
 
 // MUI Icons
 import GavelIcon from '@mui/icons-material/Gavel';
 import HearingIcon from '@mui/icons-material/Hearing';
 import HearingDisabledIcon from '@mui/icons-material/HearingDisabled';
 
-// use vole level
-import useMicrophoneVolume from "react-use-microphone-volume-hook";
-
-// local storage
-import useLocalStorage from '@rehooks/local-storage';
-
 // custom
 import BluetoothContext from '../../context/BluetoothContext'
 import api from '../../api';
-import VolumeThresholdSelector from '../../components/VolumeThresholdSelector';
+import SoundSlider from '../../components/SoundSlider';
 
 
 
 function BlowRecorder(props) {
-    const [volume, { startTrackingMicrophoneVolume, stopTrackingMicrophoneVolume }] = useMicrophoneVolume();
 
     const { projectId } = useParams()
     const { currentValue } = React.useContext(BluetoothContext)
     const [recording, setRecording] = React.useState(false)
-    const [threshold] = useLocalStorage("volumeThreshold", 60)
 
     function onClick() {
         if (recording) {
             setRecording(false)
-            stopTrackingMicrophoneVolume()
         }
         else {
             setRecording(true)
-            startTrackingMicrophoneVolume()
         }
     }
+
+    React.useEffect(() => {
+        if (!currentValue) {
+            setRecording(false)
+        }
+    }, [currentValue])
 
     async function recordBlow() {
         await api.blows.add(projectId, currentValue)
     }
-
-    React.useEffect(() => {
-        if (currentValue && volume > threshold) {
-            api.blows.add(projectId, currentValue)
-        }
-    }, [volume, projectId, currentValue, threshold])
 
     return (
         <Grid item xs={12}>
@@ -77,16 +67,12 @@ function BlowRecorder(props) {
                         {recording ? "Stop Recording" : "Start Recording"}
                     </Button>
                 </CardActions>
-                <CardContent>
-                    <VolumeThresholdSelector />
-                </CardContent>
-                {
-                    recording ?
-                    <LinearProgress
-                        value={volume}
-                        valueBuffer={100}
-                        variant="determinate"
-                    />
+                { recording ?
+                    <CardContent>
+                        <SoundSlider
+                            projectId={projectId}
+                        />
+                    </CardContent>
                     :
                     null
                 }
